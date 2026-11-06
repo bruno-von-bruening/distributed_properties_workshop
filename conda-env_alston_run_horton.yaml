@@ -1,0 +1,10 @@
+name: alston_run_horton
+channels:
+  - defaults
+dependencies:
+  - python=3.15
+  - pip
+  - pip:
+    - ipykernel
+    - numpy>=2.0 # Using numpy  2.0 should like not cause a problem. DUring testing I used 2.5.4
+
