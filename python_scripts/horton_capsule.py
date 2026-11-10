@@ -1,17 +1,25 @@
 
 from contextlib import chdir 
-from conda_env import get_python_from_conda_env
+from .conda_env import get_python_from_conda_env
 import subprocess as sp, os
 import numpy as np
 from typing import Literal
+from .run_process import run_shell_command
+
+def run_suprocess(cmd, directory=None):
+    if directory is None: directory=os.getcwd() # If no directory provided run in pwd (present working directory)
+    elif not os.path.isdir(directory): os.mkdir(directory)
+
+    # Could also delete if necessary
+    with chdir(directory):
+        # print(f"Running horton in  {the_dir}")
+        run_shell_command(cmd)
+
 
 def run_horton_inner(python_path, horton_script, fchk_file:str, method='LISA'):
     the_dir=f"horton_run"
-    if not os.path.isdir(the_dir): os.mkdir(the_dir)
-    with chdir(the_dir):
-        # print(f"Running horton in  {the_dir}")
-        cmd=f"{python_path} {horton_script} --exc --wfn {fchk_file} --method {method}"
-        proc=sp.run(cmd.split(), capture_output=True)
+    cmd=f"{python_path} {horton_script} --exc --wfn {fchk_file} --method {method}"
+    run_suprocess(cmd, directory=the_dir)
 
 def run_horton(fchk_file:str, python_path:str|None=None, method:Literal['MBIS','LISA']='LISA'):
     """ Currently does not take argument 
@@ -37,6 +45,31 @@ def run_horton(fchk_file:str, python_path:str|None=None, method:Literal['MBIS','
 
     # Could Test that horton_scrip works
     run_horton_inner(python_path, horton_script, fchk_file, method=method)
+
+
+def run_psi4(geom_file:str, method:str='pbe0',basis:str='aug-cc-pvtz',
+    python_path:str|None=None,             
+):
+    # The file needs to exist!
+    assert os.path.isfile(geom_file), f"Not an existing file: \"{geom_file}\""
+    geom_file=os.path.realpath(geom_file)
+    
+    # A environment needs to exist
+    if python_path is None:
+        try:
+            python_path = get_python_from_conda_env('run_psi4')
+        except Exception as e:
+            raise RuntimeError("Could not find the horton script. Please provide the path to the script or ensure that the conda environment 'run_horton' is available.") from e
+    else:
+        assert os.path.isfile(python_path), f"Provided python path does not exist: \"{python_path}\""
+
+    psi4_script=python_path.replace('python','run_psi4_exe.py')
+
+    cmd=f"{python_path} {psi4_script} --job_type single_point --geom {geom_file} --method {method} --basis {basis} --exc"
+
+    run_suprocess(cmd, 'run_psi4')
+
+
 
 def load_horton_moments(the_dir):
     """ Loads the moments from LISA_moments.txt file """

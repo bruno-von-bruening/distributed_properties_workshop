@@ -1,0 +1,23 @@
+name: alston_run_horton_mayavi
+channels:
+  - defaults
+dependencies:
+  - python=3.15
+  - pyyaml # need that for loading yaml storage file of psi4 calculation
+  - pip
+  - pip:
+    - ipykernel
+    - numpy<2.0 # Mayavi does not work with numpy 2
+    - pydantic
+    # FOR MAYAVI!!!
+    - mayavi        # used 4.9.0 during testing
+      # - puremagic<2.0 # Problem with interactive viewer for 2.0
+    - ipywidgets    # Need for displaying in terminal
+    - ipyevents     # Need for displying in terminal
+    - PyQT5
+    - git+ssh://git@github.com/bruno-von-bruening/mayavi_molecule_viewer.git
+    - git+ssh://git@github.com/bruno-von-bruening/qcp_objects.git
+    - git+ssh://git@github.com/bruno-von-bruening/qcp_global_utils.git
+    # Not required
+    - rdkit         # Needed to show bonds in molecules
+    - rich          # For nice printout

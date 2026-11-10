@@ -45,3 +45,11 @@ def get_python_from_conda_env(env_name: str, base: str|None=None#directory=None
     python=os.path.join(base, 'envs', env_name, 'bin','python')
     assert os.path.isfile(python), f"Cannot find python executable under {python}, does the environment {env_name} exist on this machine?"
     return python
+
+
+def get_python_for_script(envo, script):
+    python=get_python_from_conda_env(envo)
+    base=python.replace('bin/python','')
+    supposed_script_file=os.path.join(base,'bin',script)
+    assert os.path.isfile(supposed_script_file)
+    return python, supposed_script_file
