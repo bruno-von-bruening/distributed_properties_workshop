@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+# Need to have this package installed! (side project from qcp_global_utils project)
+from qcp_versioning.package_docu import main_parser
+
+
+
+MAIN_PKG='qcp_density_operations'
+DEPENDENCIES=[
+    'qcp_global_utils',
+    'qcp_objects',
+    'qcp_MolView',
+]
+
+if __name__ == '__main__':
+    main_parser(MAIN_PKG, DEPENDENCIES)

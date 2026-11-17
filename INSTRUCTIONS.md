@@ -38,3 +38,12 @@ Compare the SAPT(DFT) interaciton energies vs electrostatic energies.
 -> Ideally see visualization on iso-density surface.
 
 Maybe also get mayavi ready for Alston.
+
+
+# Nov 10
+
+Alston is largely happy.
+
+Maybe want to try it out by different people.
+* First see that it work, then tune it.
+* And most importantly see if it works on their system.
